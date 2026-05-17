@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import '../models/book.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://6a0714d2c83ba8ad9b3e7020.mockapi.io';
-  static const String endpoint = '/books';
+  static const String baseUrl = 'https://jsonplaceholder.typicode.com';
+  static const String endpoint = '/posts';
 
   // Function to create book
 
@@ -18,7 +18,13 @@ class ApiService {
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        return Book.fromJson(responseData);
+        return Book(
+          id: responseData['id'],
+          title: book.title,
+          author: book.author,
+          condition: book.condition,
+          price: book.price,
+        );
       } else {
         throw Exception('Failed to create book');
       }
@@ -31,7 +37,7 @@ class ApiService {
   Future<List<Book>> fetchBooks() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl$endpoint'),
+        Uri.parse('$baseUrl$endpoint?_limit=15'),
       );
 
       if (response.statusCode == 200) {
@@ -46,7 +52,7 @@ class ApiService {
   }
 
   // Function to update books.
-  Future<Book> updateBook(String id, Book book) async {
+  Future<Book> updateBook(int id, Book book) async {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl$endpoint/$id'),
@@ -55,8 +61,13 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        return Book.fromJson(responseData);
+        return Book(
+          id: id,
+          title: book.title,
+          author: book.author,
+          condition: book.condition,
+          price: book.price,
+        );
       } else {
         throw Exception('Failed to update book');
       }

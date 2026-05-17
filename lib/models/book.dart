@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
 class Book {
-  final String? id;
+  final int? id;
   final String title;
   final String author;
   final String condition;
@@ -16,21 +14,24 @@ class Book {
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
+    final conditions = ['Excellent', 'Good', 'Fair', 'Poor'];
+    final conditionIndex = (json['userId'] as int) % conditions.length;
+    final price = (json['id'] as int) % 45 + 5;
+
     return Book(
-      author: json['author'] ?? 'Unknown Author',
-      id: json['id']?.toString(),
-      title: json['title'] ?? '',
-      condition: json['condition'] ?? 'Good',
-      price: (json['price'] ?? 0.0).toDouble(),
+      id: json['id'],
+      title: json['title'] ?? 'Untitled Book',
+      author: 'User ${json['userId']}',
+      condition: conditions[conditionIndex],
+      price: price.toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'author': author,
-      'condition': condition,
-      'price': price,
+      'body': 'Author: $author | Condition: $condition | Price: \$$price',
+      'userId': 1,
     };
   }
 }

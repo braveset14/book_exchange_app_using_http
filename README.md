@@ -1,4 +1,4 @@
-# book_exchange_app_using_http
+# book_catalog_app_using_http
 
 A Flutter application that performs CRUD operations using Provider state management and HTTP requests.
 
@@ -18,7 +18,7 @@ A Flutter application that performs CRUD operations using Provider state managem
  - Flutter
  - Provider
  - HTTP 
- - MOCKAPI
+ - JSONPLACEHOLDER
 
 ## Instructions to run
   ```bash

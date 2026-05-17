@@ -102,7 +102,7 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
       );
     }
 
-    // Show loading while saving
+    // Show custom loadingWidget while saving
     if (_isSaving) {
       return Scaffold(
         appBar: AppBar(
@@ -113,7 +113,6 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
       );
     }
 
-    // Show form
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Edit Book' : 'Add Book'),

@@ -1,5 +1,5 @@
-name: book_exchange_app_using_http
-description: A book exchange app with CRUD operations using HTTP
+name: book_catalog_app_using_http
+description: A book catalog app with CRUD operations using HTTP
 publish_to: 'none'
 version: 1.0.0+1
 

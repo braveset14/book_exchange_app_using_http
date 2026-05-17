@@ -17,8 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Load books when screen opens
-    context.read<BookProvider>().fetchBooks();
+    // Load 15 books from api when screen opens.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BookProvider>().fetchBooks();
+    });
   }
 
   @override
@@ -30,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<BookProvider>(
         builder: (context, bookProvider, child) {
-          // Loading - USING your LoadingWidget
+          // Loading - USING my custom LoadingWidget.
           if (bookProvider.isLoading && bookProvider.books.isEmpty) {
             return const LoadingWidget();
           }
 
-          // Error - USING your ErrorMessageWidget
+          // USING my custom  ErrorMessageWidget.
           if (bookProvider.errorMessage != null) {
             return ErrorMessageWidget(
               message: bookProvider.errorMessage!,
@@ -43,29 +45,26 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          // Empty
           if (bookProvider.books.isEmpty) {
             return const Center(
               child: Text('No books. Tap + to add'),
             );
           }
 
-          // List of books
+          // Lists all available books from api and ones created by user.
           return ListView.builder(
             itemCount: bookProvider.books.length,
             itemBuilder: (context, index) {
               final book = bookProvider.books[index];
               return BookCard(
                 book: book,
-                onEdit: () {
-                  Navigator.push(
+                onEdit: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => AddEditBookScreen(book: book),
                     ),
-                  ).then((_) {
-                    bookProvider.fetchBooks();
-                  });
+                  );
                 },
                 onDelete: () {
                   bookProvider.deleteBook(book.id!);
@@ -76,18 +75,15 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const AddEditBookScreen(),
-            ),
-          ).then((_) {
-            context.read<BookProvider>().fetchBooks();
-          });
-        },
-        child: const Icon(Icons.add),
-      ),
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const AddEditBookScreen(),
+              ),
+            );
+          },
+          child: const Icon(Icons.add)),
     );
   }
 }
