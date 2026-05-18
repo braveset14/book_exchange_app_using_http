@@ -4,13 +4,14 @@ class Book {
   final String author;
   final String condition;
   final double price;
-
+  final int userId;
   Book({
     this.id,
     required this.author,
     required this.condition,
     required this.price,
     required this.title,
+    required this.userId,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,7 @@ class Book {
       author: 'User ${json['userId']}',
       condition: conditions[conditionIndex],
       price: price.toDouble(),
+      userId: json['userId'] ?? 1,
     );
   }
 
@@ -31,7 +33,7 @@ class Book {
     return {
       'title': title,
       'body': 'Author: $author | Condition: $condition | Price: \$$price',
-      'userId': 1,
+      'userId': userId,
     };
   }
 }

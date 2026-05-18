@@ -60,6 +60,7 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
       author: _authorController.text.trim(),
       condition: _selectedCondition,
       price: double.parse(_priceController.text.trim()),
+      userId: widget.book?.userId ?? 1,
     );
 
     final provider = context.read<BookProvider>();

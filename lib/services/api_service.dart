@@ -13,7 +13,10 @@ class ApiService {
       final response = await http.post(
         Uri.parse('$baseUrl$endpoint'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(book.toJson()),
+        body: jsonEncode({
+          'title': book.title,
+          'userId': book.userId,
+        }),
       );
 
       if (response.statusCode == 201) {
@@ -24,6 +27,7 @@ class ApiService {
           author: book.author,
           condition: book.condition,
           price: book.price,
+          userId: book.userId,
         );
       } else {
         throw Exception('Failed to create book');
@@ -67,6 +71,7 @@ class ApiService {
           author: book.author,
           condition: book.condition,
           price: book.price,
+          userId: book.userId,
         );
       } else {
         throw Exception('Failed to update book');

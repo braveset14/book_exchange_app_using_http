@@ -23,58 +23,81 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _showDeleteDialog(BuildContext context, int id, BookProvider provider) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Book'),
+        content: const Text('Are you sure?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              provider.deleteBook(id);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Book Exchange'),
-        centerTitle: true,
-      ),
-      body: Consumer<BookProvider>(
-        builder: (context, bookProvider, child) {
-          // Loading - USING my custom LoadingWidget.
-          if (bookProvider.isLoading && bookProvider.books.isEmpty) {
-            return const LoadingWidget();
-          }
+        appBar: AppBar(
+          title: const Text('Book Catalog'),
+          centerTitle: true,
+        ),
+        body: Consumer<BookProvider>(
+          builder: (context, bookProvider, child) {
+            // Loading - USING my custom LoadingWidget.
+            if (bookProvider.isLoading && bookProvider.books.isEmpty) {
+              return const LoadingWidget();
+            }
 
-          // USING my custom  ErrorMessageWidget.
-          if (bookProvider.errorMessage != null) {
-            return ErrorMessageWidget(
-              message: bookProvider.errorMessage!,
-              onRetry: () => bookProvider.fetchBooks(),
-            );
-          }
-
-          if (bookProvider.books.isEmpty) {
-            return const Center(
-              child: Text('No books. Tap + to add'),
-            );
-          }
-
-          // Lists all available books from api and ones created by user.
-          return ListView.builder(
-            itemCount: bookProvider.books.length,
-            itemBuilder: (context, index) {
-              final book = bookProvider.books[index];
-              return BookCard(
-                book: book,
-                onEdit: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AddEditBookScreen(book: book),
-                    ),
-                  );
-                },
-                onDelete: () {
-                  bookProvider.deleteBook(book.id!);
-                },
+            // USING my custom  ErrorMessageWidget.
+            if (bookProvider.errorMessage != null) {
+              return ErrorMessageWidget(
+                message: bookProvider.errorMessage!,
+                onRetry: () => bookProvider.fetchBooks(),
               );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
+            }
+
+            if (bookProvider.books.isEmpty) {
+              return const Center(
+                child: Text('No books. Tap + to add'),
+              );
+            }
+
+            // Lists all available books from api and ones created by user.
+            return ListView.builder(
+              itemCount: bookProvider.books.length,
+              itemBuilder: (context, index) {
+                final book = bookProvider.books[index];
+                return BookCard(
+                  book: book,
+                  onEdit: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddEditBookScreen(book: book),
+                      ),
+                    );
+                  },
+                  onDelete: () {
+                    _showDeleteDialog(context, book.id!, bookProvider);
+                  },
+                );
+              },
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
             final result = await Navigator.push(
               context,
@@ -83,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           },
-          child: const Icon(Icons.add)),
-    );
+          icon: const Icon(Icons.add),
+          label: const Text('Add your book'),
+        ));
   }
 }

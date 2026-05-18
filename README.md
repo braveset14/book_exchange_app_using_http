@@ -12,7 +12,10 @@ A Flutter application that performs CRUD operations using Provider state managem
 - Error handling
 
 ## Screenshots
-
+![Get all books](image.png)
+![Update book](image-1.png)
+![Delete book](image-2.png)
+![Create book](image-3.png)
 ## Packages used
  
  - Flutter
